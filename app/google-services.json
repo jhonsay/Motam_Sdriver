@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "437986656390",
+    "firebase_url": "https://motamsdriver.firebaseio.com",
+    "project_id": "motamsdriver",
+    "storage_bucket": "motamsdriver.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:437986656390:android:92a2331030d3df26",
+        "android_client_info": {
+          "package_name": "com.cryptoull.motam_sdriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "437986656390-uopav84o2maas22slvf1rr3dfv7va5hi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cryptoull.motam_sdriver",
+            "certificate_hash": "28cb8624837166922f836f9aef47ac273de9d19c"
+          }
+        },
+        {
+          "client_id": "437986656390-46nvfol1asgapk7sk8keu3v6c13sp1nu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpW2pIza6-qY8bC63L-bSDdV0XKjeH6hs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "437986656390-46nvfol1asgapk7sk8keu3v6c13sp1nu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
