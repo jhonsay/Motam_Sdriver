@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,12 +61,12 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         setSupportActionBar(toolbar);
 
 
-        /*
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-*/
+
 
         miUbicacion();
 
@@ -111,6 +112,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+
+
     }
 
 
@@ -131,6 +134,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             ubi.setLon(location.getLongitude());
             ubi.setTimestamp(System.currentTimeMillis());
             //AgregarMarcador(lat, lng);
+
 
         }
     }
