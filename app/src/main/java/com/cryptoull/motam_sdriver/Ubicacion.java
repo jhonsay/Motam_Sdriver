@@ -10,7 +10,7 @@ public class Ubicacion {
 
     public double lat;
     public double lon;
-    public String uid;
+    //private String uid;
     private long timeStamp;
     public Timestamp time;
 
@@ -18,8 +18,8 @@ public class Ubicacion {
 
     }
 
-    public Ubicacion(String uid, double lat, double lon, long timeStamp) {
-        this.uid = uid;
+    public Ubicacion(double lat, double lon, long timeStamp) {
+        //this.uid = uid;
         this.lat = lat;
         this.lon = lon;
         this.timeStamp = timeStamp;
@@ -48,7 +48,12 @@ public class Ubicacion {
         return lat;
     }
 
-    public double getLong() {
+    public double getLon() {
         return lon;
     }
+
+    /*
+    public String getUid() {
+        return uid;
+    }*/
 }

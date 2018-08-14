@@ -83,13 +83,13 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         long taim = System.currentTimeMillis();
         // Timestamp timestamp = new Timestamp(taim);
 
-        ubi = new Ubicacion(mAuth.getUid(), location.getLatitude(), location.getLongitude(), taim);
+        ubi = new Ubicacion(location.getLatitude(), location.getLongitude(), taim);
 
 
         //userLocation.child(mAuth.getUid()).setValue(ubi);
 
-        locationUsers.child(String.valueOf(taim)).setValue(ubi);
-
+        //locationUsers.child(String.valueOf(taim)).setValue(ubi);
+        locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
 
         //ejemplos.push(String.valueOf(taim));
 
@@ -112,7 +112,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         gMap = googleMap;
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
-        LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLong());
+        LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLon());
         //googleMap.addMarker(new MarkerOptions().position(currentPosition).title("I'm Here"));
         gMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
 
@@ -145,11 +145,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             ubi.setLon(location.getLongitude());
             ubi.setTimestamp(System.currentTimeMillis());
 
-            LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLong());
-            //gMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+            LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLon());
             gMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
-
-
 
         }
     }
@@ -180,13 +177,24 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             //double dou = Double.valueOf(st);
 
 
-            ActualizarUbicacion(location);
+            //ActualizarUbicacion(location);
+            ubi.setLat(location.getLatitude());
+            ubi.setLon(location.getLongitude());
+            ubi.setTimestamp(System.currentTimeMillis());
+
+            LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLon());
+            gMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
+
+
             //userLocation.child(mAuth.getUid()).setValue(ubi);
 
             textLat.setText(String.valueOf(nf.format(location.getLatitude())));
             textLon.setText(String.valueOf(nf.format(location.getLongitude())));
-            locationUsers.child(ubi.getTimeStringStamp()).setValue(ubi);
-            //setLocation(location);
+
+
+            //locationUsers.child(ubi.getTimeStringStamp()).setValue(ubi);
+            locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
+
         }
 
         @Override
