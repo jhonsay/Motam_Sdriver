@@ -22,7 +22,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,17 +39,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private DatabaseReference userLocation = database.getReference("userLocation");
     private DatabaseReference locationUsers = database.getReference("locationUsers");
     private DatabaseReference ejemplos = database.getReference("ejemplos");
-
     private Ubicacion ubi;
-
+    private GoogleMap gMap;
 
     String mensaje1;
     String direccion = "";
     private Location location;
     private TextView textLat;
     private TextView textLon;
-
-
 
 
     @Override
@@ -61,11 +57,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         setSupportActionBar(toolbar);
 
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
 
         miUbicacion();
@@ -77,12 +71,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         textLon = (TextView) findViewById(R.id.longitude);
 
 
-
         //updatePosition();
 
         mLogoffBtn = (Button) findViewById(R.id.logoff);
-
-
 
 
         textLat.setText(String.valueOf(location.getLatitude()));
@@ -90,9 +81,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
         long taim = System.currentTimeMillis();
-       // Timestamp timestamp = new Timestamp(taim);
+        // Timestamp timestamp = new Timestamp(taim);
 
-        ubi = new Ubicacion(mAuth.getUid(),location.getLatitude(),location.getLongitude(), taim);
+        ubi = new Ubicacion(mAuth.getUid(), location.getLatitude(), location.getLongitude(), taim);
 
 
         //userLocation.child(mAuth.getUid()).setValue(ubi);
@@ -113,19 +104,39 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         });
 
 
-
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
         LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLong());
-        googleMap.addMarker(new MarkerOptions().position(currentPosition)
-                .title("I'm Here"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+        //googleMap.addMarker(new MarkerOptions().position(currentPosition).title("I'm Here"));
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        gMap.setMyLocationEnabled(true);
     }
+
+    /*
+    @Override
+    public void onMapReady(GoogleMap map) {
+        map.setLocationSource(mLocationSource);
+        map.setOnMapLongClickListener(mLocationSource);
+        map.setMyLocationEnabled(true);
+    }*/
+
 
     //actualizar la ubicacion
     private void ActualizarUbicacion(Location location) {
@@ -133,7 +144,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             ubi.setLat(location.getLatitude());
             ubi.setLon(location.getLongitude());
             ubi.setTimestamp(System.currentTimeMillis());
-            //AgregarMarcador(lat, lng);
+
+            LatLng currentPosition = new LatLng(ubi.getLat(), ubi.getLong());
+            //gMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
+            gMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
+
 
 
         }
