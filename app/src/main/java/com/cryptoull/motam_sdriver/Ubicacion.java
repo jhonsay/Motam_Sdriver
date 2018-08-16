@@ -1,7 +1,5 @@
 package com.cryptoull.motam_sdriver;
 
-import java.sql.Timestamp;
-
 /**
  * Created by jhonsay on 2/6/18.
  */
@@ -12,7 +10,7 @@ public class Ubicacion {
     public double lon;
     //private String uid;
     private long timeStamp;
-    public Timestamp time;
+    //public Timestamp time;
 
     public Ubicacion() {
 
@@ -23,7 +21,7 @@ public class Ubicacion {
         this.lat = lat;
         this.lon = lon;
         this.timeStamp = timeStamp;
-        this.time = new Timestamp(timeStamp);
+        //this.time = new Timestamp(timeStamp);
     }
 
 
@@ -37,10 +35,11 @@ public class Ubicacion {
 
     public void setTimestamp(long timestamp) {
         this.timeStamp = timestamp;
-        this.time = new Timestamp(timeStamp);
+        //this.time = new Timestamp(timeStamp);
     }
 
     public String getTimeStringStamp() {
+
         return String.valueOf(timeStamp);
     }
 

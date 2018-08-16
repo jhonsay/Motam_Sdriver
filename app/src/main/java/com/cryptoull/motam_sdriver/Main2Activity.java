@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +44,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     //private DatabaseReference userLocation = database.getReference("userLocation");
     private DatabaseReference locationUsers = database.getReference("locationUsers");
+
+    private DatabaseReference aUsersl = database.getReference("actualUsersLocations");
     //private DatabaseReference ejemplos = database.getReference("ejemplos");
     private Ubicacion ubi;
     private GoogleMap gMap;
@@ -94,7 +97,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         //userLocation.child(mAuth.getUid()).setValue(ubi);
 
         //locationUsers.child(String.valueOf(taim)).setValue(ubi);
-        locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
+        //locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
+
+
+       // aUsersl.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
 
         //ejemplos.push(String.valueOf(taim));
 
@@ -112,8 +118,6 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
         DatabaseReference lUsers = database.getReference("locationUsers");
-
-        //DatabaseReference aUsers = database.getReference("locationUsers");
 
 
  /*       lUsers.addValueEventListener(new ValueEventListener() {
@@ -145,32 +149,68 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "*************** onChildAdded:" + dataSnapshot.getKey() + "Value: " + dataSnapshot.getValue());
+                //Log.d(TAG, "*************** onChildAdded:  " + dataSnapshot.getKey() + "  Value: " + dataSnapshot.getValue());
 
+                //Ubicacion ub = dataSnapshot.getValue(Ubicacion.class);
+
+                //Log.d(TAG, "*************** Clave?: " + ub.getTimeStringStamp());
+
+
+
+                ChildEventListener cEventListener = new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
+
+                        Log.d(TAG, "HIJO *************** onChildAdded:  " + dSnapshot.getKey() + "  Value: " + dSnapshot.getValue());
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError dbaseError) {
+
+                    }
+                };
+                dataSnapshot.getRef().addChildEventListener(cEventListener);
+
+
+                //Log.d(TAG, "*************** Clave?: " + dataSnapshot.getRef());
+
+                dataSnapshot.getRef().setValue(null);
             }
 
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-               // Log.d(TAG, "*************** onChildChanged:" + dataSnapshot.getKey() + "Value: " + lUsers.child(dataSnapshot.getKey()).limitToFirst(1));
 
-                Log.d(TAG, "*************** onChildChanged: " + dataSnapshot.getKey() + "Value: " + dataSnapshot.getValue() + " ------->  " + dataSnapshot.getRef()
-                        .child("locationUsers").child(dataSnapshot.getKey()).limitToFirst(1).toString());
-
-               // Query consul = databaseReference.child("posts").limitToFirst(100);
+                Log.d(TAG, "*************** onChildChanged: " + dataSnapshot.getKey() + "   Value: " + dataSnapshot.getValue());
 
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "*************** onChildRemoved:" + dataSnapshot.getKey());
+                Log.d(TAG, "*************** onChildRemoved: " + dataSnapshot.getKey());
 
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "*************** onChildMoved:" + dataSnapshot.getKey());
+                Log.d(TAG, "*************** onChildMoved: " + dataSnapshot.getKey());
 
             }
 
@@ -180,7 +220,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
 
         };
-        lUsers.addChildEventListener(childEventListener);
+        //lUsers.addChildEventListener(childEventListener);
+        aUsersl.addChildEventListener(childEventListener);
 
         //lUsers.removeEventListener(childEventListener);
 
@@ -291,7 +332,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             //locationUsers.child(ubi.getTimeStringStamp()).setValue(ubi);
             locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
-
+            aUsersl.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
 
 
         }
