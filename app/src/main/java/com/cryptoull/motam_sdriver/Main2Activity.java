@@ -9,9 +9,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +25,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,15 +35,15 @@ import java.text.NumberFormat;
 
 public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback {
 
-
+    private static final String TAG = Main2Activity.class.getSimpleName();
     private Button mLogoffBtn;
 
     private FirebaseAuth mAuth;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference userLocation = database.getReference("userLocation");
+    //private DatabaseReference userLocation = database.getReference("userLocation");
     private DatabaseReference locationUsers = database.getReference("locationUsers");
-    private DatabaseReference ejemplos = database.getReference("ejemplos");
+    //private DatabaseReference ejemplos = database.getReference("ejemplos");
     private Ubicacion ubi;
     private GoogleMap gMap;
 
@@ -103,6 +108,98 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+
+
+
+        DatabaseReference lUsers = database.getReference("locationUsers");
+
+        //DatabaseReference aUsers = database.getReference("locationUsers");
+
+
+ /*       lUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataValue : dataSnapshot.getChildren()) {
+                    String data = dataValue.getValue().toString();
+                    Log.d(TAG, "*: " + data);
+                    //Toast.makeText(Main2Activity.this, "Recibo datos:  " + data, Toast.LENGTH_SHORT).show();
+                }
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+
+                //String value = dataSnapshot.getValue(String.class);
+                //Log.d("*-> ", "Value is: " + value);
+
+                //Toast.makeText(Main2Activity.this, "Recibo datos:  ", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("-> ", "Failed to read value.", error.toException());
+            }
+        });
+*/
+
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "*************** onChildAdded:" + dataSnapshot.getKey() + "Value: " + dataSnapshot.getValue());
+
+            }
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+               // Log.d(TAG, "*************** onChildChanged:" + dataSnapshot.getKey() + "Value: " + lUsers.child(dataSnapshot.getKey()).limitToFirst(1));
+
+                Log.d(TAG, "*************** onChildChanged: " + dataSnapshot.getKey() + "Value: " + dataSnapshot.getValue() + " ------->  " + dataSnapshot.getRef()
+                        .child("locationUsers").child(dataSnapshot.getKey()).limitToFirst(1).toString());
+
+               // Query consul = databaseReference.child("posts").limitToFirst(100);
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "*************** onChildRemoved:" + dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "*************** onChildMoved:" + dataSnapshot.getKey());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.w("-> ", "Failed to read value.");
+            }
+
+        };
+        lUsers.addChildEventListener(childEventListener);
+
+        //lUsers.removeEventListener(childEventListener);
+
+
+/*
+        locationUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String out = (String) dataSnapshot.getValue();
+
+                Toast.makeText(Main2Activity.this, "Recibo datos:  " + out, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w("---> ", "Failed to read value.", error.toException());
+            }
+        });
+*/
 
     }
 
@@ -194,6 +291,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             //locationUsers.child(ubi.getTimeStringStamp()).setValue(ubi);
             locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
+
+
 
         }
 
