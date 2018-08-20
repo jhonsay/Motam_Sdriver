@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.NumberFormat;
+import java.util.HashMap;
 
 public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -150,51 +150,25 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                //Log.d(TAG, "*************** onChildAdded:  " + dataSnapshot.getKey() + "  Value: " + dataSnapshot.getValue());
-
-                //Ubicacion ub = dataSnapshot.getValue(Ubicacion.class);
-
-                //Log.d(TAG, "*************** Clave?: " + ub.getTimeStringStamp());
+                Log.d(TAG, "PADRE *************** onChildAdded:  " + dataSnapshot.getKey() + "  Value: " + dataSnapshot.getValue());
 
 
 
-                ChildEventListener cEventListener = new ChildEventListener() {
-
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
-
-                        Log.d(TAG, "HIJO *************** onChildAdded:  " + dSnapshot.getKey() + "  Value: " + dSnapshot.getValue());
-                        dSnapshot.getRef().setValue(null);
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError dbaseError) {
-
-                    }
-                };
-                dataSnapshot.getRef().addChildEventListener(cEventListener);
+                HashMap data = (HashMap) dataSnapshot.getValue();
 
 
+                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + data.get("lon"));
+
+                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + data.get("lat"));
+                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + data.get("timeStringStamp"));
+
+                if (mAuth.getUid() != dataSnapshot.getKey()){
+
+                    //gMap.setLocationSource();
 
 
-                //Log.d(TAG, "*************** Clave?: " + dataSnapshot.getRef());
+                }
 
-                dataSnapshot.getRef().setValue(null);
             }
 
 
@@ -208,7 +182,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "*************** onChildRemoved: " + dataSnapshot.getKey());
+                Log.d(TAG, "PADRE *************** onChildRemoved: " + dataSnapshot.getKey());
 
             }
 
@@ -336,8 +310,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             //locationUsers.child(ubi.getTimeStringStamp()).setValue(ubi);
             locationUsers.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
-            aUsersl.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
 
+
+            aUsersl.child(mAuth.getUid()).setValue(ubi);
+
+            aUsersl.child(mAuth.getUid()).setValue(null);
+
+            //aUsersl.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
+
+            //aUsersl.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(null);
 
         }
 
