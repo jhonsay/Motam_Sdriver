@@ -52,7 +52,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     //private DatabaseReference ejemplos = database.getReference("ejemplos");
     private Ubicacion ubi;
     private GoogleMap gMap;
-    private HashMap<String,Marker> marcadores;
+    private HashMap<String,Marker> marcadores = new HashMap<String,Marker>();
 
     String mensaje1;
     String direccion = "";
@@ -173,11 +173,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
 
                 if (mAuth.getUid() != dataSnapshot.getKey()){
-                    marcadores.put(dataSnapshot.getKey(),gMap.addMarker(new MarkerOptions()
+
+                    Marker mark = gMap.addMarker(new MarkerOptions()
                             .position(new LatLng(data.getLat(),data.getLon()))
                             .title(dataSnapshot.getKey())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 
+                    marcadores.put(dataSnapshot.getKey(),mark);
+
+                    Log.d(TAG, "------***------:  Añadido con exito");
                 }
 
             }
@@ -185,9 +189,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-                Ubicacion data = dataSnapshot.getValue(Ubicacion.class);
-                Log.d(TAG, "*************** onChildChanged: " + dataSnapshot.getKey() + "   Value: " + dataSnapshot.getValue());
-                marcadores.get(dataSnapshot.getKey()).setPosition(new LatLng(data.getLat(),data.getLon()));
+                if (mAuth.getUid() != dataSnapshot.getKey()){
+                    Ubicacion data = dataSnapshot.getValue(Ubicacion.class);
+                    Log.d(TAG, "*************** onChildChanged: " + dataSnapshot.getKey() + "   Value: " + dataSnapshot.getValue());
+                    marcadores.get(dataSnapshot.getKey()).setPosition(new LatLng(data.getLat(),data.getLon()));
+                }
 
             }
 
