@@ -23,7 +23,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -164,8 +167,14 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
                 if (mAuth.getUid() != dataSnapshot.getKey()){
 
-                    //gMap.setLocationSource();
+                    double lat = Double.parseDouble(data.get("lat").toString());
+                    double lon = Double.parseDouble(data.get("lon").toString());
 
+                    Marker marker = gMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(lat,lon))
+                            .title(dataSnapshot.getKey())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
+                            .snippet("Population: 776733"));
 
                 }
 
