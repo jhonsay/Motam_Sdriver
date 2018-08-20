@@ -61,6 +61,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        //setContentView(R.layout.content_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -163,6 +164,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     public void onChildAdded(@NonNull DataSnapshot dSnapshot, @Nullable String s) {
 
                         Log.d(TAG, "HIJO *************** onChildAdded:  " + dSnapshot.getKey() + "  Value: " + dSnapshot.getValue());
+                        dSnapshot.getRef().setValue(null);
                     }
 
                     @Override
@@ -186,6 +188,8 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     }
                 };
                 dataSnapshot.getRef().addChildEventListener(cEventListener);
+
+
 
 
                 //Log.d(TAG, "*************** Clave?: " + dataSnapshot.getRef());
