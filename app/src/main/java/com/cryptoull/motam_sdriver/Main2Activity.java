@@ -52,6 +52,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     //private DatabaseReference ejemplos = database.getReference("ejemplos");
     private Ubicacion ubi;
     private GoogleMap gMap;
+    private HashMap<String,Marker> marcadores;
 
     String mensaje1;
     String direccion = "";
@@ -151,30 +152,31 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 */
 
         ChildEventListener childEventListener = new ChildEventListener() {
+
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG, "PADRE *************** onChildAdded:  " + dataSnapshot.getKey() + "  Value: " + dataSnapshot.getValue());
+                Log.d(TAG, "*************** onChildAdded:  " + dataSnapshot.getKey() + "  Value: " + dataSnapshot.getValue());
+
+                Ubicacion data = dataSnapshot.getValue(Ubicacion.class);
+
+                //HashMap data = (HashMap) dataSnapshot.getValue();
 
 
 
-                HashMap data = (HashMap) dataSnapshot.getValue();
-
-
+/*
                 Log.d(TAG, "PADRE ------***------:  " + "  Value: " + data.get("lon"));
 
-                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + data.get("lat"));
-                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + data.get("timeStringStamp"));
+                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + ubi.getTimeStringStamp());
+                Log.d(TAG, "PADRE ------***------:  " + "  Value: " + ubi.getLon());
+*/
+
 
                 if (mAuth.getUid() != dataSnapshot.getKey()){
-
-                    double lat = Double.parseDouble(data.get("lat").toString());
-                    double lon = Double.parseDouble(data.get("lon").toString());
-
-                    Marker marker = gMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat,lon))
+                    marcadores.put(dataSnapshot.getKey(),gMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(data.getLat(),data.getLon()))
                             .title(dataSnapshot.getKey())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
-                            .snippet("Population: 776733"));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))));
 
                 }
 
@@ -183,15 +185,15 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-
+                Ubicacion data = dataSnapshot.getValue(Ubicacion.class);
                 Log.d(TAG, "*************** onChildChanged: " + dataSnapshot.getKey() + "   Value: " + dataSnapshot.getValue());
-
+                marcadores.get(dataSnapshot.getKey()).setPosition(new LatLng(data.getLat(),data.getLon()));
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "PADRE *************** onChildRemoved: " + dataSnapshot.getKey());
+                Log.d(TAG, "*************** onChildRemoved: " + dataSnapshot.getKey());
 
             }
 
@@ -323,7 +325,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 
             aUsersl.child(mAuth.getUid()).setValue(ubi);
 
-            aUsersl.child(mAuth.getUid()).setValue(null);
+           // aUsersl.child(mAuth.getUid()).setValue(null);
 
             //aUsersl.child(mAuth.getUid()).child(ubi.getTimeStringStamp()).setValue(ubi);
 
