@@ -172,6 +172,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
 */
 
 
+
                 if (mAuth.getUid() != dataSnapshot.getKey()){
 
                     Marker mark = gMap.addMarker(new MarkerOptions()
