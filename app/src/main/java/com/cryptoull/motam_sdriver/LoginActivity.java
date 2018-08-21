@@ -7,8 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,8 +46,30 @@ public class LoginActivity extends AppCompatActivity {
         //mEmailField.setText("test@test.com");
         //mPasswordField.setText("123456");
 
-        mEmailField.setText("test001@cryptoull.com");
-        mPasswordField.setText("test001");
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        String[] users = {"","test001","test002","test003","test004","test005","test006","test007","test008"};
+        spinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, users));
+
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id)
+            {
+                String user = (String) adapterView.getItemAtPosition(pos);
+                mEmailField.setText(user + "@cryptoull.com");
+                mPasswordField.setText(user);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {    }
+        });
+
+
+        //mEmailField.setText("test001@cryptoull.com");
+        //mPasswordField.setText("test001");
 
         //FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
